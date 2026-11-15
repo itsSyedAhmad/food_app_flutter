@@ -1,6 +1,6 @@
 # food_app
 
-A new Flutter project.
+A sample Food App developed using Flutter
 
 ## Getting Started
 
