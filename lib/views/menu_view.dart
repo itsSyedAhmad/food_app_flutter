@@ -1,39 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/enums/food_category.dart';
 import 'package:food_app/components/category_item_card.dart';
-import 'package:food_app/views/tab_intro_view.dart';
-
-import 'package:flutter/material.dart';
 import 'package:food_app/components/app_layout.dart';
 import 'package:food_app/theme/app_colors.dart';
-import 'package:food_app/views/tab_intro_view.dart';
 
 class MenuTabScreen extends StatefulWidget {
-  final int selectedIndex;
-  const MenuTabScreen({super.key, required this.selectedIndex});
+  final FoodCategory selectedCategory;
+  const MenuTabScreen({super.key, required this.selectedCategory});
 
   @override
   State<MenuTabScreen> createState() => _MenuTabScreenState();
 }
 
 class _MenuTabScreenState extends State<MenuTabScreen> {
-  static const categories = ['Snacks', 'Meal', 'Vegan', 'Dessert', 'Drinks'];
-  var selectedIndex = -1;
+  late FoodCategory selectedCategory;
 
   @override
   void initState() {
-    print("On open Menu screen");
-
-    Future.delayed(const Duration(milliseconds: 100)).then((_) {
-      setState(() {
-        selectedIndex = widget.selectedIndex;
-      });
-    });
+    selectedCategory = widget.selectedCategory;
     super.initState();
   }
 
   @override
   void dispose() {
-    print("On close Menu screen");
     super.dispose();
   }
 
@@ -54,19 +43,16 @@ class _MenuTabScreenState extends State<MenuTabScreen> {
               padding: EdgeInsets.only(left: 35, top: 15, bottom: 0, right: 35),
               child: LayoutBuilder(
                 builder: (context, k) {
-                  print(k.maxWidth);
-                  final eachWidth = k.maxWidth / 5;
+                  final eachWidth = k.maxWidth / FoodCategoryDetails.visible.length;
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: categories.map((label) {
-                      final index = categories.indexOf(label);
-
+                    children: FoodCategoryDetails.visible.map((category) {
                       return ClipPath(
                         clipper: CurvedTabClipper(),
 
                         child: Container(
-                          color: index == selectedIndex
+                          color: category == selectedCategory
                               ? AppColors.whiteBase
                               : AppColors.orangeBase,
                           width: eachWidth,
@@ -77,10 +63,9 @@ class _MenuTabScreenState extends State<MenuTabScreen> {
                             right: 9,
                           ),
                           child: CategoryItemCard(
-                            label: label,
+                            category: category,
                             onTap: () {
-                              print("on Taps ${label}");
-                              selectedIndex = index;
+                              selectedCategory = category;
                               setState(() {});
                             },
                           ),

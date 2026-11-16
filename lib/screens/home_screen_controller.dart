@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/enums/food_category.dart';
+import 'package:food_app/enums/main_tab.dart';
 import 'package:food_app/theme/app_colors.dart';
 import 'package:food_app/views/favorites_view.dart';
 import 'package:food_app/views/help_view.dart';
@@ -14,22 +16,22 @@ class HomeScreenController extends StatefulWidget {
 }
 
 class _HomeScreenControllerState extends State<HomeScreenController> {
-  int _selectedPageIndex = 0;
-  int _selectedCategoryIndex = -1;
+  MainTab _selectedPage = MainTab.home;
+  FoodCategory _selectedCategory = FoodCategory.none;
 
-  void onChangeCategoryIndex({required int index}) {
-    _selectedCategoryIndex = index;
-    _selectedPageIndex = 1;
+  void onChangeCategory({required FoodCategory category}) {
+    _selectedCategory = category;
+    _selectedPage = MainTab.menu;
     setState(() {});
   }
 
   List<Widget> get _screens => [
     HomeTabScreen(
-      onTapCategoryItem: (int index) {
-        onChangeCategoryIndex(index: index);
+      onTapCategoryItem: (FoodCategory category) {
+        onChangeCategory(category: category);
       },
     ),
-    MenuTabScreen(selectedIndex: _selectedCategoryIndex),
+    MenuTabScreen(selectedCategory: _selectedCategory),
     FavoritesTabScreen(),
     OrdersTabScreen(),
     HelpTabScreen(),
@@ -37,9 +39,8 @@ class _HomeScreenControllerState extends State<HomeScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    print(_selectedCategoryIndex);
     return Scaffold(
-      body: _screens[_selectedPageIndex],
+      body: _screens[_selectedPage.pageIndex - 1],
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         child: SizedBox(
@@ -48,10 +49,10 @@ class _HomeScreenControllerState extends State<HomeScreenController> {
             context: context,
             removeBottom: true,
             child: BottomNavigationBar(
-              currentIndex: _selectedPageIndex,
+              currentIndex: _selectedPage.pageIndex - 1,
               onTap: (index) => setState(() {
-                _selectedPageIndex = index;
-                _selectedCategoryIndex = -1;
+                _selectedPage = MainTabIndex.fromPageIndex(index + 1);
+                _selectedCategory = FoodCategory.none;
               }),
               type: BottomNavigationBarType.fixed,
               selectedItemColor: AppColors.whiteBase,

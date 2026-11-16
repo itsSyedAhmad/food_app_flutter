@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/enums/food_category.dart';
 import 'package:food_app/components/app_layout.dart';
 
 import 'package:food_app/theme/app_colors.dart';
@@ -6,7 +7,7 @@ import 'package:food_app/theme/app_colors.dart';
 import '../components/category_item_card.dart';
 
 class HomeTabScreen extends StatefulWidget {
-  final Function(int) onTapCategoryItem;
+  final ValueChanged<FoodCategory> onTapCategoryItem;
   const HomeTabScreen({super.key, required this.onTapCategoryItem});
 
   @override
@@ -14,8 +15,6 @@ class HomeTabScreen extends StatefulWidget {
 }
 
 class _HomeTabScreenState extends State<HomeTabScreen> {
-  static const categories = ['Snacks', 'Meal', 'Vegan', 'Dessert', 'Drinks'];
-
   @override
   Widget build(BuildContext context) {
     return AppLayout(
@@ -37,12 +36,11 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: categories.map((label) {
+              children: FoodCategoryDetails.visible.map((category) {
                 return CategoryItemCard(
-                  label: label,
+                  category: category,
                   onTap: () {
-                    print("On tap ${label}");
-                    widget.onTapCategoryItem(categories.indexOf(label));
+                    widget.onTapCategoryItem(category);
                   },
                 );
               }).toList(),
