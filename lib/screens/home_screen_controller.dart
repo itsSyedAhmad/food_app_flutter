@@ -18,11 +18,21 @@ class HomeScreenController extends StatefulWidget {
 class _HomeScreenControllerState extends State<HomeScreenController> {
   MainTab _selectedPage = MainTab.home;
   FoodCategory _selectedCategory = FoodCategory.none;
+  final List<GlobalKey<NavigatorState>> _navigatorKeys = List.generate(
+    MainTab.values.length,
+    (_) => GlobalKey<NavigatorState>(),
+  );
 
   void onChangeCategory({required FoodCategory category}) {
-    _selectedCategory = category;
-    _selectedPage = MainTab.menu;
-    setState(() {});
+    setState(() {
+      _selectedCategory = category;
+      _selectedPage = MainTab.menu;
+    });
+    _navigatorKeys[MainTab.menu.index].currentState?.pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => MenuTabScreen(selectedCategory: category),
+      ),
+    );
   }
 
   List<Widget> get _screens => [
@@ -37,10 +47,23 @@ class _HomeScreenControllerState extends State<HomeScreenController> {
     HelpTabScreen(),
   ];
 
+  Widget _buildTabNavigator(int index) {
+    return Navigator(
+      key: _navigatorKeys[index],
+      onGenerateRoute: (settings) => MaterialPageRoute<void>(
+        settings: settings,
+        builder: (_) => _screens[index],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedPage.pageIndex - 1],
+      body: IndexedStack(
+        index: _selectedPage.pageIndex - 1,
+        children: List.generate(MainTab.values.length, _buildTabNavigator),
+      ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         child: SizedBox(

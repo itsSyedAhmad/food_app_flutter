@@ -17,12 +17,14 @@ class _MenuTabScreenState extends State<MenuTabScreen> {
 
   @override
   void initState() {
+    print("init state");
     selectedCategory = widget.selectedCategory;
     super.initState();
   }
 
   @override
   void dispose() {
+    print("despose state");
     super.dispose();
   }
 
@@ -43,7 +45,8 @@ class _MenuTabScreenState extends State<MenuTabScreen> {
               padding: EdgeInsets.only(left: 35, top: 15, bottom: 0, right: 35),
               child: LayoutBuilder(
                 builder: (context, k) {
-                  final eachWidth = k.maxWidth / FoodCategoryDetails.visible.length;
+                  final eachWidth =
+                      k.maxWidth / FoodCategoryDetails.visible.length;
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
